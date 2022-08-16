@@ -2,10 +2,13 @@
 
 **Abstract:** The adoption of pre-trained language models in task-oriented dialogue systems has resulted in significant enhancements of their text generation abilities. However, these architectures are slow to use because of the large number of trainable parameters and can sometimes fail to generate diverse responses. To address these limitations, we propose two models with auxiliary tasks for response selection - (1) distinguishing distractors from ground truth responses and (2) distinguishing synthetic responses from ground truth labels. They achieve state-of-the-art results on the MultiWOZ 2.1 dataset with combined scores of 107.5 and 108.3 and outperform a baseline with three times more parameters. We publish reproducible code and checkpoints and discuss the effects of applying auxiliary tasks to T5-based architectures.
 
+**Paper:** https://arxiv.org/abs/2208.07097
+
+**Implementation:**
 - (1) https://github.com/radi-cho/RSTOD/tree/encoder
 - (2) https://github.com/radi-cho/RSTOD/tree/main
 
-**Paper:** https://arxiv.org/abs/2208.07097
+**Checkpoints:** https://drive.google.com/drive/folders/1W7MoU2LfOeaVND0BCGtWVJ-lJqqK0CDj
 
 # Cite
 
@@ -41,3 +44,5 @@
     abstract = "The paradigm of leveraging large pre-trained language models has made significant progress on benchmarks on task-oriented dialogue (TOD) systems. In this paper, we combine this paradigm with multi-task learning framework for end-to-end TOD modeling by adopting span prediction as an auxiliary task. In end-to-end setting, our model achieves new state-of-the-art results with combined scores of 108.3 and 107.5 on MultiWOZ 2.0 and MultiWOZ 2.1, respectively. Furthermore, we demonstrate that multi-task learning improves not only the performance of model but its generalization capability through domain adaptation experiments in the few-shot setting. The code is available at github.com/bepoetree/MTTOD.",
 }
 ```
+
+- Refer to https://github.com/budzianowski/multiwoz for dataset details.
