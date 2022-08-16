@@ -2,6 +2,9 @@
 
 **Abstract:** The adoption of pre-trained language models in task-oriented dialogue systems has resulted in significant enhancements of their text generation abilities. However, these architectures are slow to use because of the large number of trainable parameters and can sometimes fail to generate diverse responses. To address these limitations, we propose two models with auxiliary tasks for response selection - (1) distinguishing distractors from ground truth responses and (2) distinguishing synthetic responses from ground truth labels. They achieve state-of-the-art results on the MultiWOZ 2.1 dataset with combined scores of 107.5 and 108.3 and outperform a baseline with three times more parameters. We publish reproducible code and checkpoints and discuss the effects of applying auxiliary tasks to T5-based architectures.
 
+- (1) https://github.com/radi-cho/RSTOD/tree/encoder
+- (2) https://github.com/radi-cho/RSTOD/tree/main
+
 **Paper:** https://arxiv.org/abs/2208.07097
 
 # Cite
@@ -21,7 +24,7 @@
 
 # Credits
 - This work was developed during SRS'22 in Varna, Bulgaria.
-- This work uses the [MTTOD](https://aclanthology.org/2021.findings-emnlp.112/) architecture as a baseline. We also used some of the training and evaluation scripts from https://github.com/bepoetree/MTTOD. Make sure to also cite:
+- The [MTTOD](https://aclanthology.org/2021.findings-emnlp.112/) architecture was used as a baseline. We also used some of the training and evaluation scripts from https://github.com/bepoetree/MTTOD. Make sure to also cite:
 
 ```bibtex
 @inproceedings{lee-2021-improving-end,
