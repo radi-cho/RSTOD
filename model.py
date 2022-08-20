@@ -1,4 +1,5 @@
 import copy
+import random
 
 import torch
 from torch import nn
@@ -21,7 +22,7 @@ class T5WithSpan(T5ForConditionalGeneration):
         self.expected_vocab_size = expected_vocab_size
 
         if consistency_task:
-            self.consistency_head = torch.nn.Linear(self.max_seq_len * expected_vocab_size, 1)
+            self.consistency_head = torch.nn.Linear(512, 1)
 
         self.dropout = nn.Dropout(config.dropout_rate)
 
@@ -67,6 +68,14 @@ class T5WithSpan(T5ForConditionalGeneration):
                 "use_cache": use_cache,
                 "decoder_type": kwargs.get("decoder_type")}
 
+    def choose_resp(self, input_ids, options, return_dict=True):
+        options = [torch.cat((input_ids, opt), dim=1) for opt in options]
+        consistency_enc = [torch.mean(self.encoder(input_ids=opt, return_dict=return_dict)[0], dim=1) for opt in options]
+        consistency_enc = torch.stack(consistency_enc, dim=1)
+
+        consistency_logits = self.consistency_head(consistency_enc)
+        return consistency_enc, consistency_logits
+
     def forward(self,
                 input_ids=None,
                 attention_mask=None,
@@ -84,8 +93,7 @@ class T5WithSpan(T5ForConditionalGeneration):
                 encoder_only=None,
                 span_task=None,
                 decoder_type=None,
-                consistency_task=False,
-                tau=1):
+                consistency_task=False):
 
         use_cache = use_cache if use_cache is not None else self.config.use_cache
         return_dict = return_dict if return_dict is not None else self.config.return_dict
@@ -160,25 +168,19 @@ class T5WithSpan(T5ForConditionalGeneration):
             batch_size = lm_labels.shape[0]
 
             if batch_size - 1 > 0:
+                shift = random.randint(1, batch_size - 1)
+                permuted_labels = lm_labels[[(i + shift) % batch_size for i in range(batch_size)]]
+
+                if random.randint(0,1) == 0:
+                    options = [lm_labels, permuted_labels]
+                    consistency_labels = torch.tensor([[1], [0]], dtype=torch.float).repeat(batch_size, 1, 1)
+                else:
+                    options = [permuted_labels, lm_labels]
+                    consistency_labels = torch.tensor([[0], [1]], dtype=torch.float).repeat(batch_size, 1, 1)
+
+                consistency_enc, consistency_logits = self.choose_resp(input_ids, options, return_dict=return_dict)
                 consistency_loss_fct = nn.BCEWithLogitsLoss()
-                generated_hard = torch.nn.functional.gumbel_softmax(lm_logits, dim=2, tau=tau, hard=True)
-                generated_soft = torch.nn.functional.gumbel_softmax(lm_logits, dim=2, tau=tau)
-                generated = generated_hard - generated_soft.detach() + generated_soft
-
-                padding = torch.nn.functional.one_hot(torch.zeros([generated.shape[0], self.max_seq_len - generated.shape[1]], dtype=torch.long, device=generated.device), num_classes=generated.shape[2])
-                generated = torch.cat((generated, padding), 1)
-                truth = torch.nn.functional.one_hot(lm_labels, num_classes=generated.shape[2]).to(dtype=torch.float)
-                truth = torch.cat((truth, padding), 1)
-
-                generated = generated.reshape(generated.shape[0], self.expected_vocab_size * self.max_seq_len)
-                truth = truth.reshape(truth.shape[0], self.expected_vocab_size * self.max_seq_len)
-
-                gen_logits = self.consistency_head(generated)
-                gen_loss = consistency_loss_fct(gen_logits, torch.zeros([gen_logits.shape[0], 1], device=gen_logits.device))
-                truth_logits = self.consistency_head(truth)
-                truth_loss = consistency_loss_fct(truth_logits, torch.ones([truth_logits.shape[0], 1], device=truth_logits.device))
-
-                consistency_loss = gen_loss + truth_loss
+                consistency_loss = consistency_loss_fct(consistency_logits, consistency_labels.to(lm_labels.device))
             else:
                 consistency_loss = torch.tensor(0, dtype=torch.float).to(lm_labels.device)
 
