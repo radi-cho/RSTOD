@@ -26,7 +26,8 @@
 ```
 
 # Credits
-- This work was developed during [SRS](http://www.math.bas.bg/srs/newsite/srs/)'22 in Varna, Bulgaria.
+- Our work was presented at [ICNLSP](https://www.icnlsp.org/) 2022.
+- This research initially started during [SRS](http://www.math.bas.bg/srs/newsite/srs/)'22.
 - The [MTTOD](https://aclanthology.org/2021.findings-emnlp.112/) architecture was used as a baseline. We also used some of the training and evaluation scripts from https://github.com/bepoetree/MTTOD. Make sure to also cite:
 
 ```bibtex
