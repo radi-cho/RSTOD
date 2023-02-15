@@ -13,7 +13,7 @@
 # Cite
 
 ```bibtex
-@misc{https://doi.org/10.48550/arxiv.2208.07097,
+@article{https://doi.org/10.48550/arxiv.2208.07097,
   doi = {10.48550/ARXIV.2208.07097},
   url = {https://arxiv.org/abs/2208.07097},
   author = {Cholakov, Radostin and Kolev, Todor},
@@ -22,6 +22,22 @@
   publisher = {arXiv},
   year = {2022},
   copyright = {arXiv.org perpetual, non-exclusive license}
+}
+```
+
+[ACL Anthology](https://aclanthology.org/2022.icnlsp-1.2/), ICNLSP 2022:
+```bibtex
+@inproceedings{cholakov-kolev-2022-efficient,
+  title = "Efficient Task-Oriented Dialogue Systems with Response Selection as an Auxiliary Task",
+  author = "Cholakov, Radostin  and
+    Kolev, Todor",
+  booktitle = "Proceedings of the 5th International Conference on Natural Language and Speech Processing (ICNLSP 2022)",
+  month = dec,
+  year = "2022",
+  address = "Trento, Italy",
+  publisher = "Association for Computational Linguistics",
+  url = "https://aclanthology.org/2022.icnlsp-1.2",
+  pages = "12--18",
 }
 ```
 
